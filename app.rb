@@ -8,7 +8,7 @@ VALID_KEY = "123"
 class ExceptionResource < Sinatra::Base
   set :methodoverride, true
 
-  # Loading mongodb with waml configuration
+  # Loading mongodb with yaml configuration
   Mongoid.load!("mongoid.yml")
 
   # Models 
@@ -22,6 +22,13 @@ class ExceptionResource < Sinatra::Base
 
   class Exception
     include Mongoid::Document
+
+    field :project_code, type: Integer
+    field :friendly, type: String
+    field :thrown_date, type: DateTime
+    field :message, type: String
+    field :class, type: String
+    field :backtrace, type: String
   end
 
   helpers do
@@ -49,6 +56,30 @@ class ExceptionResource < Sinatra::Base
   ## GET : '/' 
   get '/' do
     json_status 404, "No such route has been found."
+  end
+
+  get '*' do
+    status 404
+  end
+
+  post '*' do
+    status 404
+  end
+
+  put '*' do
+    status 404
+  end
+
+  delete '*' do
+    status 404
+  end
+
+  not_found do
+    json_status 404, "No such route has been found."
+  end
+
+  error do
+    json_status 500, "Internal Server Error : #{env['sinatra.error'].message}"
   end
 
 end
