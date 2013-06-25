@@ -3,13 +3,14 @@ require 'mongoid'
 require 'json'
 require 'sinatra/reloader' if development?
 
-VALID_KEY = "123"
+## TODO : Develop a valid token algorithm
+VALID_KEY = "KH6R643B72V085P2TRK0"
 
 class ExceptionResource < Sinatra::Base
   set :methodoverride, true
 
   # Loading mongodb with yaml configuration
-  Mongoid.load!("mongoid.yml")
+  Mongoid.load!("mongoid.yml", :development)
 
   # Models 
   class Project
@@ -18,6 +19,8 @@ class ExceptionResource < Sinatra::Base
     field :project_code, type: String
     field :name, type: String
     field :description, type: String
+    field :logo, type: String
+    field :external_order, type: Integer
   end
 
   class Exception
@@ -78,9 +81,32 @@ class ExceptionResource < Sinatra::Base
     json_status 404, "No such route has been found."
   end
 
+  ## GET : '/projects'
+  post '/projects' do
+    content_type :json
+
+    exceptions = Project.all
+    json_result 200, exceptions
+  end
+
+  ## Post a new project
+  ## POST : '/projects/new'
+  post '/projects/new' do
+    content_type :json
+
+    create_params = accept_params(params, :project_code, :name, :description, :logo, :external_order)
+    project = Project.new(create_params)
+
+    if project.save
+      json_result 200, project
+    else
+      json_result 400, project.errors.to_hash
+    end
+  end
+
   ## Return all exceptions
   ## GET : '/exceptions?token=123'
-  get '/exceptions' do
+  post '/exceptions' do
     content_type :json
 
     exceptions = Exception.all.desc(:thrown_date)
@@ -89,7 +115,7 @@ class ExceptionResource < Sinatra::Base
 
   ## Return all the exceptions limited
   ## GET : '/exceptions/{limit}?token=123'
-  get '/exceptions/:limit' do
+  post '/exceptions/:limit' do
     content_type :json
 
     exceptions = Exception.all.desc(:thrown_date)
@@ -100,7 +126,7 @@ class ExceptionResource < Sinatra::Base
 
   ## Return all exceptions by project
   ## GET : '/exceptions/{project-code}?token=123'
-  get '/exceptions/:pcode' do
+  post '/exceptions/:pcode' do
     content_type :json
 
     exceptions = Exception.where(project_code: params[:pcode])
@@ -111,7 +137,7 @@ class ExceptionResource < Sinatra::Base
 
   ## Return all exceptions by project
   ## GET : '/exceptions/{project-code}/{limit}?token=123'
-  get '/exceptions/:pcode/:limit' do
+  post '/exceptions/:pcode/:limit' do
     content_type :json
 
     exceptions = Exception.where(project_code: params[:pcode])
@@ -120,6 +146,7 @@ class ExceptionResource < Sinatra::Base
 
     json_result 200, exceptions
   end
+
 
   ## Post a new exception
   ## POST : '/exception/new'
@@ -130,12 +157,8 @@ class ExceptionResource < Sinatra::Base
     exception = Exception.new(create_params)
 
     if exception.save
-      # If successful then return the exception
-      # with the status of 200
       json_result 200, exception
     else
-      # If not successful then return HTTP 400
-      # with the json of the errors
       json_result 400, exception.errors.to_hash
     end
   end
