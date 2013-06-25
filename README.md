@@ -2,6 +2,8 @@
 expo is short for "Exception Police", which is an exception logger
 uses REST model and MongoDB.
 
+**Add mongoid.yml for this project to work**
+
 All requests must be sent with "token" parameter. If you do not sent "token"
 parameter server will return **HTTP 401**. You can change the value of token 
 in app.rb file or implement some complex authentication algorithm.
