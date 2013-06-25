@@ -2,8 +2,10 @@ development:
   sessions:
     default:
       hosts:
-        - localhost:27017
+        - 2nworks.com:27776
       database: expo_dev
+      username: nitromongo
+      password: ajhr445.ou
   options:
     allow_dynamic_fields: false
     identity_map_enabled: true
@@ -19,10 +21,12 @@ production:
   sessions:
     default:
       hosts:
-        - flame.mongohq.com:27017
-      database: mongoid
-      username: user
-      password: password
+        - 2nworks.com:27776
+      database: expo
+      username: nitromongo
+      password: ajhr445.ou
+      options:
+        safe: true
   # Here we put the Mongoid specific configuration options. These are explained
   # in more detail next.
   options:
