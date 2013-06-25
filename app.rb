@@ -1,4 +1,3 @@
-require 'sinatra'
 require 'mongoid'
 require 'json'
 require 'sinatra/reloader' if development?
@@ -81,7 +80,7 @@ class ExceptionResource < Sinatra::Base
     json_status 404, "No such route has been found."
   end
 
-  ## GET : '/projects'
+  ## POST : '/projects'
   post '/projects' do
     content_type :json
 
