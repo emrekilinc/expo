@@ -122,6 +122,16 @@ class ExceptionResource < Sinatra::Base
     json_result 200, exceptions
   end
 
+  ## Return a exception detail
+  ## POST : '/exceptions/detail'
+  post '/exceptions/detail' do
+    content_type :json
+
+    exception = Exception.find(params[:id])
+
+    json_result 200, exception
+  end
+
   ## Return all the exceptions limited
   ## POST : '/exceptions/{limit}?token=123'
   post '/exceptions/:limit' do
@@ -155,7 +165,6 @@ class ExceptionResource < Sinatra::Base
 
     json_result 200, exceptions
   end
-
 
   ## Post a new exception
   ## POST : '/exception/new'
