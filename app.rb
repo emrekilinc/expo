@@ -103,8 +103,18 @@ class ExceptionResource < Sinatra::Base
     end
   end
 
+  ## Return a project detail
+  ## POST : '/projects/detail'
+  post '/projects/detail' do
+    content_type :json
+
+    project = Project.find(params[:id])
+
+    json_result 200, project
+  end
+
   ## Return all exceptions
-  ## GET : '/exceptions?token=123'
+  ## POST : '/exceptions?token=123'
   post '/exceptions' do
     content_type :json
 
@@ -113,7 +123,7 @@ class ExceptionResource < Sinatra::Base
   end
 
   ## Return all the exceptions limited
-  ## GET : '/exceptions/{limit}?token=123'
+  ## POST : '/exceptions/{limit}?token=123'
   post '/exceptions/:limit' do
     content_type :json
 
@@ -124,7 +134,7 @@ class ExceptionResource < Sinatra::Base
   end
 
   ## Return all exceptions by project
-  ## GET : '/exceptions/{project-code}?token=123'
+  ## POST : '/exceptions/{project-code}?token=123'
   post '/exceptions/:pcode' do
     content_type :json
 
@@ -135,7 +145,7 @@ class ExceptionResource < Sinatra::Base
   end
 
   ## Return all exceptions by project
-  ## GET : '/exceptions/{project-code}/{limit}?token=123'
+  ## POST : '/exceptions/{project-code}/{limit}?token=123'
   post '/exceptions/:pcode/:limit' do
     content_type :json
 
